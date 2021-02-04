@@ -217,10 +217,10 @@ class topLevel:
 		_ana1color = '#d9d9d9' # X11 color: 'gray85'
 		_ana2color = '#ececec' # Closest X11 color: 'gray92'
 		
-		import yaml
+		import json
 		
-		with open("config.yml", "r") as ymlfile:
-			cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
+		with open("config.json", "r") as jsonFile:
+			cfg = json.loads(jsonFile.read())
 			
 		self.measurementType = tk.StringVar()
 		self.measurementType.set(cfg["defaultMeasurementType"])
@@ -632,8 +632,6 @@ class topLevel:
 			
 		
 		self.order.append(planters.Planter((height, width, length), markup, measurementType))
-		for x in self.order:
-			print((x.height, x.width, x.length, x.markup, x.measurementType))
 		
 		self.top.destroy()
 		self.updateListbox()
@@ -653,7 +651,6 @@ class topLevel:
 			return
 
 	def newOrder(self):
-		print("New Order")
 		self.orderListbox.delete(0, 'end')
 		self.order = []
 
