@@ -5,7 +5,7 @@
 #  in conjunction with Tcl version 8.6
 #    May 04, 2020 04:54:27 PM BST  platform: Windows NT
 
-import sys
+import sys, json
 
 try:
 	import Tkinter as tk
@@ -56,6 +56,8 @@ class topLevel:
 		_ana2color = '#ececec' # Closest X11 color: 'gray92'
 		
 		self.order = []
+		with open("settings.json", "r") as f:
+			self.settings = json.loads(f.read()) 
 		
 
 		top.geometry("559x233+700+220")
@@ -207,7 +209,7 @@ class topLevel:
 		self.calculateBuildButton.configure(pady="0")
 		self.calculateBuildButton.configure(text='''Calculate Build''')
 		self.calculateBuildButton.configure(command=self.showBuildScreen)
-		
+
 	def showAddPlanterScreen(self):
 		'''This class configures and populates the toplevel window.
 		top is the toplevel containing window.'''
@@ -216,14 +218,9 @@ class topLevel:
 		_compcolor = '#d9d9d9' # X11 color: 'gray85'
 		_ana1color = '#d9d9d9' # X11 color: 'gray85'
 		_ana2color = '#ececec' # Closest X11 color: 'gray92'
-		
-		import json
-		
-		with open("config.json", "r") as jsonFile:
-			cfg = json.loads(jsonFile.read())
 			
 		self.measurementType = tk.StringVar()
-		self.measurementType.set(cfg["defaultMeasurementType"])
+		self.measurementType.set(self.settings["general"]["defaultUnitOfMeasurement"])
 		self.top = tk.Toplevel()
 		self.top.focus_set()
 		self.top.resizable(False, False)
@@ -335,7 +332,7 @@ class topLevel:
 		self.markupEntry.configure(insertbackground="black")
 		self.markupEntry.configure(selectbackground="#c4c4c4")
 		self.markupEntry.configure(selectforeground="black")
-		self.markupEntry.insert(0, cfg["defaultMarkup"])
+		self.markupEntry.insert(0, self.settings["general"]["markup"])
 
 		self.cmRadioButton = tk.Radiobutton(self.dimensionsFrame)
 		self.cmRadioButton.place(relx=0.053, rely=0.681, relheight=0.106, relwidth=0.237, bordermode='ignore')
@@ -631,7 +628,7 @@ class topLevel:
 			length	= int(length * 2.54)
 			
 		
-		self.order.append(planters.Planter((height, width, length), markup, measurementType))
+		self.order.append(planters.Planter((height, width, length), self.settings))
 		
 		self.top.destroy()
 		self.updateListbox()
@@ -655,8 +652,6 @@ class topLevel:
 		self.order = []
 
 	def quit(self):
-		#self.order.append(planters.Planter((30,30,180), 300, "cm"))
-		#self.updateListbox()
 		import sys
 		sys.exit()
 

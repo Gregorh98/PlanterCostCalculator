@@ -1,0 +1,21 @@
+{
+	"general":{
+		"markup": 375,
+  		"defaultUnitOfMeasurement": "cm"
+	},
+  	"plank":{
+		"length":180,
+		"width":80,
+		"height":2,
+		"cost":4
+  	},
+	"liner":{
+	  "length":1000,
+	  "width":100,
+	  "cost":25
+  	},
+  	"screws":{
+	  	"numberPerBox":300,
+		"cost":10
+	}
+}

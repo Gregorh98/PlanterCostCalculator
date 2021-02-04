@@ -1,11 +1,13 @@
-import planks, linerRoll, math
+import planks, linerRoll
+import json, math
 class Planter():
-	def __init__(self, dimensions, markup, measurementType):
+	def __init__(self, dimensions, settings):
 		self.height, self.width, self.length = dimensions
-		self.markup = markup
-		self.measurementType = measurementType
+		self.settings = settings
+		self.markup = self.settings["general"]["markup"]
+		self.measurementType = self.settings["general"]["defaultUnitOfMeasurement"]
 		
-		self.plank = planks.Plank()
+		self.plank = planks.Plank(self.settings)
 		
 		if self.length >= 90:
 			self.numberOfSupportPlanks = 6
@@ -48,7 +50,7 @@ class Planter():
 	def calcLinerCost(self):
 		#calculate areas of all box faces and ground
 		#Multiply the sum of these by liner cost per cm2
-		self.liner = linerRoll.Liner()
+		self.liner = linerRoll.Liner(self.settings)
 
 		longSideAreas = 2*((self.length*self.height) - (2*self.plank.height))
 		shortSideAreas = 2*((self.width*self.height) - (2*self.plank.height))

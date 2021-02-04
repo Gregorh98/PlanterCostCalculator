@@ -1,9 +1,9 @@
 class Plank():
-	def __init__(self):
-		self.height = 1.9
-		self.width  = 10
-		self.length = 180
-		self.cost   = 1.33
+	def __init__(self, settings):
+		self.height = settings["plank"]["height"]
+		self.width  = settings["plank"]["width"]
+		self.length = settings["plank"]["length"]
+		self.cost   = settings["plank"]["cost"]
 		
 	def getArea(self):
 		plankArea = (self.height*self.width*self.length)
