@@ -1,0 +1,5 @@
+#the default markup shown when adding planter
+defaultMarkup: 375
+
+#the default measurement type selected when adding planter ("cm", "mm", "inches")
+defaultMeasurementType: "cm"
