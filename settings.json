@@ -1,21 +1,26 @@
 {
 	"general":{
-		"markup": 375,
+		"markup": 325,
   		"defaultUnitOfMeasurement": "cm"
+	},
+	"delivery":{
+		"postcode":"eh259nz",
+		"carMPG":30.4
 	},
   	"plank":{
 		"length":180,
-		"width":80,
+		"width":10,
 		"height":2,
-		"cost":4
+		"cost":1.55,
+		"delivery":17.40
   	},
 	"liner":{
-	  "length":1000,
-	  "width":100,
-	  "cost":25
+	  "length":4500,
+	  "width":115,
+	  "cost":23.99
   	},
   	"screws":{
-	  	"numberPerBox":300,
-		"cost":10
+	  	"numberPerBox":200,
+		"cost":2.75
 	}
 }
