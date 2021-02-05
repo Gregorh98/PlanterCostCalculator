@@ -85,10 +85,6 @@ class Planter():
 		planksNeeded = [["Length", lengthPlankDimensions, planksNeededForSections], ["Width", widthPlankDimensions, planksNeededForSections], ["Supports", supportPlankDimensions, self.numberOfSupportPlanks]]
 		return planksNeeded
 		
-		print("Length:	%s = %s" % (lengthPlankDimensions, planksNeeded))
-		print("Width:	%s = %s" % (widthPlankDimensions, planksNeeded))
-		print("Supports: %s = %s" % (supportPlankDimensions, self.numberOfSupportPlanks))
-		
 	def calcSoilNeeded(self):
 		innerVolume = self.getAreaInside()
 		soilLitresNeeded = math.ceil(innerVolume/1000)

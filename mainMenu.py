@@ -665,7 +665,43 @@ class topLevel:
 		if self.order == []:
 			messagebox.showerror("Error", "Please add a planter")
 			return
+
+		planksRequired 	= 0
+		woodCost 		= 0
+		screwCost 		= 0
+		linerCost 		= 0
+		totalCost 		= 0
+		markupCost 		= 0
+		profit			= 0
 		
+		for planter in self.order:		
+			planksRequired 	+= planter.calcWoodNeeded()
+			woodCost 		+= planter.calcWoodCostPlanks()
+			screwCost 		+= planter.calcScrewCost()
+			linerCost 		+= planter.calcLinerCost()
+			totalCost 		+= planter.calcTotalCost()
+			markupCost 		+= functions.calculateMarkup(planter.calcTotalCost(), planter.markup)
+			profit			+= functions.calculateMarkup(planter.calcTotalCost(), planter.markup)-planter.calcTotalCost()
+		
+		def basic():
+			self.calculationsListbox.delete(0, 'end')
+			self.calculationsListbox.insert("end", ("Sale Price - £%.2f" % (markupCost)))
+
+		def advanced():
+			basic()
+			self.calculationsListbox.insert("end", ("Cost to Produce - £%.2f" % (totalCost)))
+			self.calculationsListbox.insert("end", ("Profit - £%.2f" % (profit)))
+
+		def component():
+			self.calculationsListbox.delete(0, 'end')
+			self.calculationsListbox.insert("end", ("Cost of Wood - £%.2f" % (woodCost)))
+			self.calculationsListbox.insert("end", ("Cost of Screws - £%.2f" % (screwCost)))
+			self.calculationsListbox.insert("end", ("Cost of Liner - £%.2f" % (linerCost)))
+		
+		def delivery():
+			self.calculationsListbox.delete(0, 'end')
+			return None	
+
 		self.top = tk.Toplevel()
 		self.top.focus_set()
 		self.top.geometry("513x273+569+175")
@@ -693,7 +729,7 @@ class topLevel:
 		self.functionsFrame.place(relx=0.682, rely=0.0, relheight=0.641, relwidth=0.292)
 		self.functionsFrame.configure(relief='groove')
 		self.functionsFrame.configure(foreground="black")
-		self.functionsFrame.configure(text='''Functions''')
+		self.functionsFrame.configure(text='''Breakdowns''')
 		self.functionsFrame.configure(background="#d9d9d9")
 		self.functionsFrame.configure(width=150)
 
@@ -707,9 +743,9 @@ class topLevel:
 		self.function1Button.configure(highlightbackground="#d9d9d9")
 		self.function1Button.configure(highlightcolor="black")
 		self.function1Button.configure(pady="0")
-		self.function1Button.configure(text='''Function 1''')
+		self.function1Button.configure(text='''Basic''')
+		self.function1Button.configure(command=basic)
 		self.function1Button.configure(width=127)
-		self.function1Button.configure(state='disabled')
 
 		self.function2Button = tk.Button(self.functionsFrame)
 		self.function2Button.place(relx=0.067, rely=0.343, height=24, width=127, bordermode='ignore')
@@ -721,8 +757,8 @@ class topLevel:
 		self.function2Button.configure(highlightbackground="#d9d9d9")
 		self.function2Button.configure(highlightcolor="black")
 		self.function2Button.configure(pady="0")
-		self.function2Button.configure(state='disabled')
-		self.function2Button.configure(text='''Function 2''')
+		self.function2Button.configure(text='''Advanced''')
+		self.function2Button.configure(command=advanced)
 		self.function2Button.configure(width=127)
 
 		self.function3Button = tk.Button(self.functionsFrame)
@@ -735,8 +771,8 @@ class topLevel:
 		self.function3Button.configure(highlightbackground="#d9d9d9")
 		self.function3Button.configure(highlightcolor="black")
 		self.function3Button.configure(pady="0")
-		self.function3Button.configure(state='disabled')
-		self.function3Button.configure(text='''Function 3''')
+		self.function3Button.configure(command=component)
+		self.function3Button.configure(text='''Component''')
 		self.function3Button.configure(width=127)
 
 		self.function4Button = tk.Button(self.functionsFrame)
@@ -749,34 +785,13 @@ class topLevel:
 		self.function4Button.configure(highlightbackground="#d9d9d9")
 		self.function4Button.configure(highlightcolor="black")
 		self.function4Button.configure(pady="0")
+		self.function4Button.configure(command=delivery)
 		self.function4Button.configure(state='disabled')
-		self.function4Button.configure(text='''Function 4''')
+		self.function4Button.configure(text='''Delivery''')
 		self.function4Button.configure(width=127)
-				
-		planksRequired 	= 0
-		woodCost 		= 0
-		screwCost 		= 0
-		linerCost 		= 0
-		totalCost 		= 0
-		markupCost 		= 0
-		profit			= 0
+
+		basic()
 		
-		for planter in self.order:		
-			planksRequired 	+= planter.calcWoodNeeded()
-			woodCost 		+= planter.calcWoodCostPlanks()
-			screwCost 		+= planter.calcScrewCost()
-			linerCost 		+= planter.calcLinerCost()
-			totalCost 		+= planter.calcTotalCost()
-			markupCost 		+= functions.calculateMarkup(planter.calcTotalCost(), planter.markup)
-			profit			+= functions.calculateMarkup(planter.calcTotalCost(), planter.markup)-planter.calcTotalCost()
-			
-		self.calculationsListbox.insert("end", ("Cost of Wood - £%.2f" % (woodCost)))
-		self.calculationsListbox.insert("end", ("Cost of Screws - £%.2f" % (screwCost)))
-		self.calculationsListbox.insert("end", ("Cost of Liner - £%.2f" % (linerCost)))
-		self.calculationsListbox.insert("end", ("Cost to Produce - £%.2f" % (totalCost)))
-		self.calculationsListbox.insert("end", ("Sale Price - £%.2f" % (markupCost)))
-		self.calculationsListbox.insert("end", ("Profit - £%.2f" % (profit)))
-		planter.calcPlanksNeeded()
 
 	def showBuildScreen(self):
 		_bgcolor = '#d9d9d9'  # X11 color: 'gray85'

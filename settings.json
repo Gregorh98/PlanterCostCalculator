@@ -1,7 +1,7 @@
 {
 	"general":{
 		"markup": 325,
-  		"defaultUnitOfMeasurement": "cm",
+  		"defaultUnitOfMeasurement": "cm"
 	},
 	"delivery":{
 		"postcode":"eh259nz",
