@@ -29,8 +29,8 @@ class Planter():
 
 	def calcScrewCost(self):
 		screwsPerPlanter = 50
-		screwsPerBox     = 200
-		costPerBox       = 4
+		screwsPerBox     = self.settings["screws"]["numberPerBox"]
+		costPerBox       = self.settings["screws"]["cost"]
 		
 		costPerPlanter = ((costPerBox/screwsPerBox)*screwsPerPlanter)
 
