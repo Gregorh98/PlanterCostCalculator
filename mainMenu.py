@@ -893,12 +893,14 @@ class topLevel:
 		
 		planksRequired 	= 0
 		soilRequired	= 0
+		screwsRequired	= 0
 		planksToBuild	= {}
 		
 		for planter in self.order:
 			planksRequired 	+= planter.calcWoodNeeded()
 			soilRequired 	+= planter.calcSoilNeeded()
 			planksNeeded 	= planter.calcPlanksNeeded()
+			screwsRequired += planter.calcScrewsNeeded()
 			for x in planksNeeded:
 				if x[1] in planksToBuild:
 					planksToBuild[x[1]] += x[2]
@@ -907,6 +909,8 @@ class topLevel:
 		
 		self.calculationsListbox.insert("end", ("Planks Required - %s" % (planksRequired)))
 		
+		self.calculationsListbox.insert("end", ("Screws Required - %s" % (screwsRequired)))
+
 		for x, y in planksToBuild.items():
 			self.calculationsListbox.insert("end", ("%s - %s" % (x, y)))
 		
