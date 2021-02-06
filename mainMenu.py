@@ -55,11 +55,12 @@ class topLevel:
 		_ana1color = '#d9d9d9' # X11 color: 'gray85'
 		_ana2color = '#ececec' # Closest X11 color: 'gray92'
 		
+		self.versionNumber = "1.0.0"
 		self.order = []
 		
 
 		top.geometry("559x233+700+220")
-		top.title("Planter Order Calculator")
+		top.title("Planter Order Calculator v%s" % (self.versionNumber))
 		top.configure(background="#d9d9d9")
 		top.configure(highlightbackground="#d9d9d9")
 		top.configure(highlightcolor="black")
@@ -255,6 +256,7 @@ class topLevel:
 		self.lengthEntry.configure(insertbackground="black")
 		self.lengthEntry.configure(selectbackground="#c4c4c4")
 		self.lengthEntry.configure(selectforeground="black")
+		self.lengthEntry.focus_set()
 
 		self.widthEntry = tk.Entry(self.dimensionsFrame)
 		self.widthEntry.place(relx=0.526, rely=0.255, height=20, relwidth=0.337, bordermode='ignore')
@@ -469,6 +471,7 @@ class topLevel:
 		self.lengthEntry.configure(selectbackground="#c4c4c4")
 		self.lengthEntry.configure(selectforeground="black")
 		self.lengthEntry.insert(0, order.length)
+		self.lengthEntry.focus_set()
 
 		self.widthEntry = tk.Entry(self.dimensionsFrame)
 		self.widthEntry.place(relx=0.526, rely=0.255, height=20, relwidth=0.337, bordermode='ignore')
@@ -835,9 +838,9 @@ class topLevel:
 		self.function1Button.configure(highlightbackground="#d9d9d9")
 		self.function1Button.configure(highlightcolor="black")
 		self.function1Button.configure(pady="0")
-		self.function1Button.configure(text='''Function 1''')
+		self.function1Button.configure(text='''View Blueprint''')
+		self.function1Button.configure(command=self.drawBlueprint)
 		self.function1Button.configure(width=127)
-		self.function1Button.configure(state='disabled')
 
 		self.function2Button = tk.Button(self.functionsFrame)
 		self.function2Button.place(relx=0.067, rely=0.343, height=24, width=127, bordermode='ignore')
@@ -902,7 +905,77 @@ class topLevel:
 		
 		self.calculationsListbox.insert("end", ("Soil Required - %s litres" % (soilRequired)))
 		
-		
+	def drawBlueprint(self):
+		plank	={"height":10, "width":2}
+		planter ={
+			"length":180,
+			"height":30,
+			"width":30
+			}
+
+		bgColour	= "#f8fff0"
+		woodColour	= "#c39b4f"
+		spaceColour	 = "#423f39"
+
+		spacing				= 10
+
+		for planter in self.order:
+			shortSideOffset		= {"x":spacing, "y":spacing}
+			topOffset			= {"x":spacing, "y":planter.height+(spacing*2)}
+			longSideOffset		= {"x":planter.length+(spacing*2), "y":spacing}
+
+			self.top = tk.Toplevel()
+			self.top.focus_set()
+			#self.top.geometry("513x273+569+175")
+			self.top.title("Blueprint %sx%sx%s" % (planter.length, planter.width, planter.height))
+			self.top.configure(background="#d9d9d9")
+			self.top.resizable(False, False)
+
+			blueprintHeight=(spacing*3)+(planter.height+planter.width)
+			blueprintWidth=(spacing*3)+(planter.length+planter.width)
+
+			can = tk.Canvas(self.top, bg=bgColour, width=blueprintWidth, height=blueprintHeight)
+			can.pack()
+
+			def drawTop():
+				#Top
+				can.create_rectangle(topOffset["x"], topOffset["y"], planter.length+topOffset["x"], planter.width+topOffset["y"], fill=woodColour)
+
+				#border planks
+				can.create_rectangle(topOffset["x"]+plank["width"], topOffset["y"]+plank["width"], planter.length+topOffset["x"]-plank["width"], planter.width+topOffset["y"]-plank["width"], fill=spaceColour)
+
+				#top plank correction
+				can.create_rectangle(topOffset["x"], topOffset["y"], planter.length+topOffset["x"], plank["width"]+topOffset["y"])
+
+				#bottom plank correction
+				can.create_rectangle(topOffset["x"], topOffset["y"]+planter.width, planter.length+topOffset["x"], topOffset["y"]+planter.width-plank["width"])
+
+			def drawLongSide():
+				#LongSide
+				can.create_rectangle(shortSideOffset["x"], shortSideOffset["y"], planter.length+shortSideOffset["x"], planter.height+shortSideOffset["y"], fill=woodColour)
+
+				#height planks
+				for heightModifier in range(int(planter.height/plank["height"])):
+					can.create_rectangle(shortSideOffset["x"], shortSideOffset["y"]+(heightModifier*plank["height"]), planter.length+shortSideOffset["x"], planter.height+shortSideOffset["y"])
+
+			def drawShortSide():
+				#LongSide
+				can.create_rectangle(longSideOffset["x"], longSideOffset["y"], planter.width+longSideOffset["x"], planter.height+longSideOffset["y"], fill=woodColour)
+
+				#longPlankOverhangRight
+				can.create_rectangle(longSideOffset["x"], longSideOffset["y"], planter.width+longSideOffset["x"]-plank["width"], planter.height+longSideOffset["y"])
+
+				#longPlankOverhangLeft
+				can.create_rectangle(longSideOffset["x"], longSideOffset["y"], longSideOffset["x"]+plank["width"], planter.height+longSideOffset["y"])
+
+				#height planks
+				for heightModifier in range(int(planter.height/plank["height"])):
+					can.create_rectangle(longSideOffset["x"], longSideOffset["y"]+(heightModifier*plank["height"]),planter.width+longSideOffset["x"], planter.height+longSideOffset["y"])
+
+			drawTop()
+			drawLongSide()
+			drawShortSide()
+
 if __name__ == '__main__':
 	vp_start_gui()
 
