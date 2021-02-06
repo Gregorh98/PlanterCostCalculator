@@ -27,8 +27,11 @@ class Planter():
 	
 		return outsideArea
 
+	def calcScrewsNeeded(self):
+		return 50
+
 	def calcScrewCost(self):
-		screwsPerPlanter = 50
+		screwsPerPlanter = self.calcScrewsNeeded()
 		screwsPerBox     = self.settings["screws"]["numberPerBox"]
 		costPerBox       = self.settings["screws"]["cost"]
 		
