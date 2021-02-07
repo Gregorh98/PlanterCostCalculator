@@ -660,6 +660,92 @@ class topLevel:
 		import sys
 		sys.exit()
 
+	def showDeliveryScreen(self):
+		deliveryCost=tk.StringVar()
+		
+		def calculateDelivery():
+			import urllib.request, json, math
+
+			mpg = self.settings["delivery"]["carMPG"]
+			frm=self.settings["delivery"]["postcode"]	#Starting postcode
+			to=self.targetPostcodeEntry.get()			#Ending postcode
+			
+			try:
+				with urllib.request.urlopen("http://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=%s&wp.1=%s&avoid=minimizeTolls&key=ArfUMkZz1BDeipepkaosNOzwnTxIasoTYUx_DqgdjViSW27F44N6_3lmV3j3fKZV" % (frm, to)) as url:
+					data=json.loads(url.read().decode())
+					
+					for resourceSet in data["resourceSets"]:
+						for resource in resourceSet["resources"]:
+							distanceBetween = resource["travelDistance"]*0.62137
+							
+					cost = (math.ceil(distanceBetween)/mpg)*2 # x2 because need return journey too
+				
+				deliveryCost.set("£{:.2f}".format(cost))
+			except:
+				deliveryCost.set("Error")
+			
+		_bgcolor = '#d9d9d9'  # X11 color: 'gray85'
+		_fgcolor = '#000000'  # X11 color: 'black'
+		_compcolor = '#d9d9d9' # X11 color: 'gray85'
+		_ana1color = '#d9d9d9' # X11 color: 'gray85'
+		_ana2color = '#ececec' # Closest X11 color: 'gray92'
+		
+		top = tk.Toplevel()
+		top.focus_set()
+		top.geometry("208x145+474+241")
+		top.minsize(120, 1)
+		top.maxsize(5764, 1061)
+		top.resizable(1,  1)
+		top.title("Planter Price Calculator")
+		top.configure(background="#d9d9d9")
+		top.configure(highlightbackground="#d9d9d9")
+		top.configure(highlightcolor="black")
+
+		self.deliveryFrame = tk.LabelFrame(top)
+		self.deliveryFrame.place(relx=0.048, rely=0.0, relheight=0.966, relwidth=0.913)
+		self.deliveryFrame.configure(relief='groove')
+		self.deliveryFrame.configure(foreground="black")
+		self.deliveryFrame.configure(text='''Delivery''')
+		self.deliveryFrame.configure(background="#d9d9d9")
+
+		self.Label1 = tk.Label(self.deliveryFrame)
+		self.Label1.place(relx=0.053, rely=0.143, height=41, width=174, bordermode='ignore')
+		self.Label1.configure(background="#d9d9d9")
+		self.Label1.configure(disabledforeground="#a3a3a3")
+		self.Label1.configure(foreground="#000000")
+		self.Label1.configure(relief="sunken")
+		self.Label1.configure(textvariable=deliveryCost)
+		deliveryCost.set("Enter a Postcode")
+		
+
+		self.targetPostcodeEntry = tk.Entry(self.deliveryFrame)
+		self.targetPostcodeEntry.place(relx=0.368, rely=0.5, height=20, relwidth=0.6, bordermode='ignore')
+		self.targetPostcodeEntry.configure(background="white")
+		self.targetPostcodeEntry.configure(disabledforeground="#a3a3a3")
+		self.targetPostcodeEntry.configure(font="TkFixedFont")
+		self.targetPostcodeEntry.configure(foreground="#000000")
+		self.targetPostcodeEntry.configure(insertbackground="black")
+
+		self.targerPostcodeLabel = tk.Label(self.deliveryFrame)
+		self.targerPostcodeLabel.place(relx=0.053, rely=0.5, height=22, width=54, bordermode='ignore')
+		self.targerPostcodeLabel.configure(background="#d9d9d9")
+		self.targerPostcodeLabel.configure(disabledforeground="#a3a3a3")
+		self.targerPostcodeLabel.configure(foreground="#000000")
+		self.targerPostcodeLabel.configure(text='''Postcode''')
+
+		self.calculateButton = tk.Button(self.deliveryFrame)
+		self.calculateButton.place(relx=0.316, rely=0.714, height=24, width=67, bordermode='ignore')
+		self.calculateButton.configure(activebackground="#ececec")
+		self.calculateButton.configure(activeforeground="#000000")
+		self.calculateButton.configure(background="#d9d9d9")
+		self.calculateButton.configure(disabledforeground="#a3a3a3")
+		self.calculateButton.configure(foreground="#000000")
+		self.calculateButton.configure(highlightbackground="#d9d9d9")
+		self.calculateButton.configure(highlightcolor="black")
+		self.calculateButton.configure(pady="0")
+		self.calculateButton.configure(text='''Calculate''')
+		self.calculateButton.configure(command=calculateDelivery)
+
 	def showCostScreen(self):
 		_bgcolor = '#d9d9d9'  # X11 color: 'gray85'
 		_fgcolor = '#000000'  # X11 color: 'black'
@@ -704,8 +790,7 @@ class topLevel:
 			self.calculationsListbox.insert("end", ("Cost of Liner - £%.2f" % (linerCost)))
 		
 		def delivery():
-			self.calculationsListbox.delete(0, 'end')
-			return None	
+			self.showDeliveryScreen()
 
 		self.top = tk.Toplevel()
 		self.top.focus_set()
@@ -791,13 +876,12 @@ class topLevel:
 		self.function4Button.configure(highlightcolor="black")
 		self.function4Button.configure(pady="0")
 		self.function4Button.configure(command=delivery)
-		self.function4Button.configure(state='disabled')
+		self.function4Button.configure(state='normal')
 		self.function4Button.configure(text='''Delivery''')
 		self.function4Button.configure(width=127)
 
 		basic()
 		
-
 	def showBuildScreen(self):
 		_bgcolor = '#d9d9d9'  # X11 color: 'gray85'
 		_fgcolor = '#000000'  # X11 color: 'black'
