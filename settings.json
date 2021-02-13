@@ -1,11 +1,14 @@
 {
 	"general":{
 		"markup": 325,
-  		"defaultUnitOfMeasurement": "cm"
+  		"defaultUnitOfMeasurement": "cm",
+		"versionNumber":"1.2.0"
 	},
 	"delivery":{
 		"postcode":"eh259nz",
-		"carMPG":30.4
+		"carMPG":30.4,
+		"pricePerLitre":1.10,
+		"roundTripEnabled":true
 	},
   	"plank":{
 		"length":180,

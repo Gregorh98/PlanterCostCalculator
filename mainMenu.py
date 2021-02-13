@@ -55,13 +55,11 @@ class topLevel:
 		_ana1color = '#d9d9d9' # X11 color: 'gray85'
 		_ana2color = '#ececec' # Closest X11 color: 'gray92'
 		
-		self.versionNumber = "1.0.0"
-		
 		self.order = []
 		with open("settings.json", "r") as f:
 			self.settings = json.loads(f.read()) 
 
-		
+		self.versionNumber = self.settings["general"]["versionNumber"]
 
 		top.geometry("559x233+700+220")
 		top.title("Planter Order Calculator v%s" % (self.versionNumber))
@@ -669,6 +667,10 @@ class topLevel:
 			mpg = self.settings["delivery"]["carMPG"]
 			frm=self.settings["delivery"]["postcode"]	#Starting postcode
 			to=self.targetPostcodeEntry.get()			#Ending postcode
+			pricePerLitre = self.settings["delivery"]["pricePerLitre"]
+			roundTripEnabled = self.settings["delivery"]["roundTripEnabled"]
+
+			mpl = mpg/4.5460900;
 			
 			try:
 				with urllib.request.urlopen("http://dev.virtualearth.net/REST/V1/Routes/Driving?wp.0=%s&wp.1=%s&avoid=minimizeTolls&key=ArfUMkZz1BDeipepkaosNOzwnTxIasoTYUx_DqgdjViSW27F44N6_3lmV3j3fKZV" % (frm, to)) as url:
@@ -678,8 +680,13 @@ class topLevel:
 						for resource in resourceSet["resources"]:
 							distanceBetween = resource["travelDistance"]*0.62137
 							
-					cost = (math.ceil(distanceBetween)/mpg)*2 # x2 because need return journey too
-				
+					requiredFuel = (math.ceil(distanceBetween)/mpl)
+
+					cost = pricePerLitre * requiredFuel
+
+					if roundTripEnabled:
+						cost = cost*2
+
 				deliveryCost.set("£{:.2f}".format(cost))
 			except:
 				deliveryCost.set("Error")
